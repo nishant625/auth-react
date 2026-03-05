@@ -64,16 +64,18 @@ function App() {
 | `user` | `object \| null` | Decoded JWT payload — `{ sub, email, scope, exp, ... }` |
 | `login()` | `() => void` | Redirects to the auth server login page |
 | `logout()` | `() => void` | Clears tokens from storage, resets state |
-| `getAccessToken()` | `() => string \| null` | Returns the raw JWT string for use in API calls |
+| `getAccessToken()` | `() => Promise<string \| null>` | Returns a valid JWT, silently refreshing if expired |
 
 ## Making authenticated API calls
+
+`getAccessToken()` is async — it checks expiry and silently refreshes if needed.
 
 ```js
 const { getAccessToken } = useAuth()
 
 const res = await fetch('/api/me', {
   headers: {
-    Authorization: `Bearer ${getAccessToken()}`
+    Authorization: `Bearer ${await getAccessToken()}`
   }
 })
 ```
