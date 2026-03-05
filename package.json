@@ -1,0 +1,25 @@
+{
+  "name": "@nishant625/auth-react",
+  "version": "0.1.0",
+  "description": "React SDK for easy-auth OAuth2/PKCE authentication",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup src/index.jsx --format cjs,esm --external react"
+  },
+  "peerDependencies": {
+    "react": ">=17",
+    "react-dom": ">=17"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  }
+}
