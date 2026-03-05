@@ -20,6 +20,14 @@ const sha256 = async (plain) => {
   return new Uint8Array(hash);
 };
 
+const decodeJwt = (token) => {
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch {
+    return null;
+  }
+};
+
 export function AuthProvider({ children, clientId, clientSecret, authServerUrl, redirectUri }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -33,7 +41,17 @@ export function AuthProvider({ children, clientId, clientSecret, authServerUrl, 
     if (code) {
       handleCallback(code, state).finally(() => setIsLoading(false));
     } else {
-      setIsAuthenticated(!!localStorage.getItem('access_token'));
+      // Restore session from localStorage on page load
+      const token = localStorage.getItem('access_token');
+      if (token) {
+        const payload = decodeJwt(token);
+        if (payload && payload.exp * 1000 > Date.now()) {
+          setUser(payload);
+          setIsAuthenticated(true);
+        } else {
+          localStorage.removeItem('access_token');
+        }
+      }
       setIsLoading(false);
     }
   }, []);
@@ -73,8 +91,9 @@ export function AuthProvider({ children, clientId, clientSecret, authServerUrl, 
     sessionStorage.removeItem('pkce_verifier');
     sessionStorage.removeItem('oauth_state');
 
+    const payload = decodeJwt(data.access_token);
+    setUser(payload);
     setIsAuthenticated(true);
-    // Remove code/state from URL without reload
     window.history.replaceState({}, '', window.location.pathname);
   };
 
