@@ -20,7 +20,7 @@ const sha256 = async (plain) => {
   return new Uint8Array(hash);
 };
 
-export function AuthProvider({ children, clientId, authServerUrl, redirectUri }) {
+export function AuthProvider({ children, clientId, clientSecret, authServerUrl, redirectUri }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
@@ -59,6 +59,7 @@ export function AuthProvider({ children, clientId, authServerUrl, redirectUri })
         code,
         redirect_uri: redirectUri,
         client_id: clientId,
+        ...(clientSecret && { client_secret: clientSecret }),
         code_verifier: codeVerifier,
       }).toString(),
     });
