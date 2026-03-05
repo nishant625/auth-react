@@ -1,6 +1,6 @@
 {
   "name": "@nishant625/auth-react",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React SDK for easy-auth OAuth2/PKCE authentication",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -12,7 +12,7 @@
   },
   "files": ["dist"],
   "scripts": {
-    "build": "tsup src/index.jsx --format cjs,esm --external react"
+    "build": "tsup"
   },
   "peerDependencies": {
     "react": ">=17",
